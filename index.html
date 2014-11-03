@@ -1,0 +1,24 @@
+<!doctype HTML>
+<html ng-app="tilesApp">
+  <head>
+    <title>Tiles</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body ng-controller="tileCtrl">
+    <h1>Tiles</h1>
+    <main>
+      <div class="tile" ng-repeat="tile in tiles" ng-style="{'background-color':tile.color, 'transform':tile.transform}" ng-mouseover="tile.nextColor()" ng-click="tile.nextColor()"></div>
+      </div>
+    </main>
+    <footer>
+    <nav>
+        <li><a ng-click="reset()">reset</a></li>
+        <li><a ng-click="autoFill()">auto-fill</a></li>
+    </nav>
+    </footer>
+  </body>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
+  <script src="http://www.softsynth.com/webaudio/webaudio_tools.js"></script>
+  <script src="webSynth.js"></script>
+  <script src="tileCtrl.js"></script>
+</html>
