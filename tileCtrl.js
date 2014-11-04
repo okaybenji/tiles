@@ -21,6 +21,7 @@ tilesApp.controller('tileCtrl', ['$scope', '$timeout',
             ];
         
         var numTiles = 144;
+        var flipDelay = 300;
 
         var Tile = function(color) {
             this.color = color || 'none';
@@ -37,20 +38,23 @@ tilesApp.controller('tileCtrl', ['$scope', '$timeout',
                 $timeout(function() {
                     tile.color = colors[(i+1)%colors.length];
                     stopTone();
-                }, 300);
+                }, flipDelay);
             },
             
             setColor: function setColor(color) {
                 var tile = this;
                 var color = color || colors[0];
-                var i = colors.indexOf(color);
+                var noColor = (color === 'none');
+                if (!noColor) {
+                    var i = colors.indexOf(color);
+                    startTone((i+1)*100);
+                }
                 tile.flip();
-                startTone((i+1)*100);
                 //change color just as tile flips
                 $timeout(function() {
                     tile.color = color;
-                    stopTone();
-                }, 300);
+                    if (!noColor) {stopTone()};
+                }, flipDelay);
             },
             
             flip: function flip() {
@@ -60,7 +64,7 @@ tilesApp.controller('tileCtrl', ['$scope', '$timeout',
             
         };
         
-        $scope.reset = function reset() {
+        $scope.init = function init() {
             
             $scope.tiles=[];
             
@@ -68,6 +72,23 @@ tilesApp.controller('tileCtrl', ['$scope', '$timeout',
                 //$scope.tiles.push(new Tile(colors[i%colors.length])); //option A: load tiles with colors (no animation)
                 $scope.tiles.push(new Tile);
             }
+            
+            //color a tile as a hint that page is ready for user interaction
+            $timeout(function() {
+                $scope.tiles[0].setColor(colors[0]);
+            }, 10);
+        }
+        
+        //uncolor all tiles in sequence with animation
+        $scope.reset = function reset(i) {
+            
+            i = i || 0;
+            var delay = 1;
+            
+            $timeout(function() {
+                $scope.tiles[i].setColor('none');
+                if (i<$scope.tiles.length-1) {$scope.reset(i+1);}
+            }, delay);
         }
         
         //color all tiles in sequence with animation
@@ -82,12 +103,7 @@ tilesApp.controller('tileCtrl', ['$scope', '$timeout',
             }, delay);
         }
         
-        $scope.reset();
-        
-        //color a tile as a hint that page is ready for user interaction
-        $timeout(function() {
-            $scope.tiles[0].setColor(colors[0]);
-        }, 10);
+        $scope.init();
         
     }
 ]);
