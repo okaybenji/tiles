@@ -18,7 +18,23 @@ tilesApp.controller('tileCtrl', ['$scope', '$timeout',
             'rgb(146,39,143)',
             'rgb(236,0,140)',
             'rgb(237,20,91)'
-            ];
+        ];
+        
+        var sounds = [
+            130.81,
+            164.81,
+            196,
+            220,
+            261.63,
+            329.63,
+            392,
+            523.25,
+            587.33,
+            659.26,
+            783.99,
+            880,
+            1046.50
+        ];
         
         var numTiles = 144;
         var flipDelay = 300;
@@ -33,7 +49,7 @@ tilesApp.controller('tileCtrl', ['$scope', '$timeout',
                 var tile = this;
                 var i = colors.indexOf(tile.color);
                 tile.flip();
-                startTone((i+2)*100);
+                startTone(sounds[(i+1)%sounds.length]);
                 //change color just as tile flips
                 $timeout(function() {
                     tile.color = colors[(i+1)%colors.length];
@@ -47,7 +63,7 @@ tilesApp.controller('tileCtrl', ['$scope', '$timeout',
                 var noColor = (color === 'none');
                 if (!noColor) {
                     var i = colors.indexOf(color);
-                    startTone((i+1)*100);
+                    startTone(sounds[i]);
                 }
                 tile.flip();
                 //change color just as tile flips
