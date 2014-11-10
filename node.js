@@ -11,7 +11,22 @@ app.get('/', function(req, res) {
 app.use(express.static(__dirname + '/'));
 
 io.on('connection', function(socket) {
+    
     console.log('user connected with IP',socket.handshake.address);
+    
+    socket.on('requestReset', function() {
+        io.emit('reset');
+    });
+    
+    socket.on('requestAutoFill', function() {
+        io.emit('autoFill');
+    });
+    
+    socket.on('requestNextColor', function($index) {
+        console.log('received request from',socket.handshake.address,'for next color for tile with index',$index);
+        io.emit('nextColor', $index);
+    });
+    
 });
 
 http.listen(port, function(){
