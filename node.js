@@ -15,16 +15,17 @@ io.on('connection', function(socket) {
     console.log('user connected with IP',socket.handshake.address);
     
     socket.on('requestReset', function() {
-        io.emit('reset');
+        console.log(socket.handshake.address,'requested reset');
+        socket.broadcast.emit('reset');
     });
     
     socket.on('requestAutoFill', function() {
-        io.emit('autoFill');
+        console.log(socket.handshake.address,'requested auto-fill');
+        socket.broadcast.emit('autoFill');
     });
     
     socket.on('requestNextColor', function($index) {
-        console.log('received request from',socket.handshake.address,'for next color for tile with index',$index);
-        io.emit('nextColor', $index);
+        socket.broadcast.emit('nextColor', $index);
     });
     
 });

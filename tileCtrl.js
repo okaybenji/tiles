@@ -44,10 +44,16 @@ tilesApp.controller('tileCtrl', ['$scope', '$timeout', 'socket',
         };
         
         //server request functions
-        $scope.requestReset = socket.emit('requestReset');
-        $scope.requestAutoFill = socket.emit('requestAutoFill');
+        $scope.requestReset = function() {
+            $scope.reset();
+            socket.emit('requestReset');
+        };
+        $scope.requestAutoFill = function() {
+            $scope.autoFill();
+            socket.emit('requestAutoFill');
+        };
         $scope.requestNextColor = function($index) {
-            console.log('requesting next color for tile with index',$index);
+            $scope.tiles[$index].nextColor();
             socket.emit('requestNextColor', $index);
         };
         
@@ -59,7 +65,6 @@ tilesApp.controller('tileCtrl', ['$scope', '$timeout', 'socket',
             $scope.autoFill();
         });
         socket.on('nextColor', function($index) {
-            console.log('next color granted for tile with index',$index);
             $scope.tiles[$index].nextColor();
         });
         
