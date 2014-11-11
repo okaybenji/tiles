@@ -1,8 +1,8 @@
 var tilesApp = angular.module('tilesApp', []);
 
-tilesApp.controller('tileCtrl', ['$scope', '$timeout',
+tilesApp.controller('tileCtrl', ['$scope', '$timeout', 'socket',
     
-    function tileCtrl($scope, $timeout) {
+    function tileCtrl($scope, $timeout, socket) {
         
         var colors = [
             'rgb(237,28,36)',
@@ -42,6 +42,31 @@ tilesApp.controller('tileCtrl', ['$scope', '$timeout',
         var Tile = function(color) {
             this.color = color || 'none';
         };
+        
+        //server request functions
+        $scope.requestReset = function() {
+            $scope.reset();
+            socket.emit('requestReset');
+        };
+        $scope.requestAutoFill = function() {
+            $scope.autoFill();
+            socket.emit('requestAutoFill');
+        };
+        $scope.requestNextColor = function($index) {
+            $scope.tiles[$index].nextColor();
+            socket.emit('requestNextColor', $index);
+        };
+        
+        //watch for server commands
+        socket.on('reset', function() {
+            $scope.reset();
+        });
+        socket.on('autoFill', function() {
+            $scope.autoFill();
+        });
+        socket.on('nextColor', function($index) {
+            $scope.tiles[$index].nextColor();
+        });
         
         Tile.prototype = {
         
@@ -123,3 +148,29 @@ tilesApp.controller('tileCtrl', ['$scope', '$timeout',
         
     }
 ]);
+
+tilesApp.factory('socket', function($rootScope) {
+    
+    var socket = io.connect();
+    
+    return {
+        on: function(eventName, callback) {
+            socket.on(eventName, function() {  
+                var args = arguments;
+                $rootScope.$apply(function() {
+                    callback.apply(socket, args);
+                });
+            });
+    },
+        emit: function(eventName, data, callback) {
+            socket.emit(eventName, data, function() {
+                var args = arguments;
+                $rootScope.$apply(function() {
+                    if (callback) {
+                        callback.apply(socket, args);
+                    }
+                });
+            })
+        }
+    };
+});

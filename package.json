@@ -1,0 +1,8 @@
+{
+  "name": "tiles",
+  "version": "0.0.2",
+  "description": "a musical toy in angular",
+  "dependencies": {
+    "express": "^4.10.1"
+  }
+}
