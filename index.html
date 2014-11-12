@@ -19,8 +19,8 @@
   </body>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
   <script src="http://www.softsynth.com/webaudio/webaudio_tools.js"></script>
-  <script src="/socket.io/socket.io.js"></script>
+  <script src="http://54.148.36.98:80/socket.io/socket.io.js"></script>
   <script src="webSynth.js"></script>
   <script src="tileCtrl.js"></script>
-  <script>var socket = io();</script>
+  <script>var socket = io.connect('http://54.148.36.98:80');</script>
 </html>

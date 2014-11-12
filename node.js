@@ -10,6 +10,8 @@ app.get('/', function(req, res) {
 
 app.use(express.static(__dirname + '/'));
 
+io.set('origins', 'http://benjikay.com:80');
+
 io.on('connection', function(socket) {
     
     console.log('user connected with IP',socket.handshake.address);
